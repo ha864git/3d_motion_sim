@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+  <title>3d motion simurator for Robot2</title>
+</head>
+
+<style>
+  div { transition: 3s; }
+  .content { transform-style: preserve-3d; }
+  .content div { position: absolute; opacity: 0.5; }
+
+  .color_top { background-color: gold; }
+  .color_bottom { background-color: teal; }
+  .color_left { background-color: pink; }
+  .color_right { background-color: lime; }
+  .color_front { background-color: indianred; }
+  .color_back { background-color: skyblue; }
+
+  #robot2 {
+    height:240px;
+    width: 240px;
+    position: absolute;
+    transform-style: preserve-3d;
+    transform: translateX(100px) translateY(100px);
+  }
+
+  /*** mbit ***/
+  .mbit_top, .mbit_bottom { width: 100px; height: 6px; top: 37px; }
+  .mbit_front, .mbit_back { width: 100px; height: 80px; }
+  .mbit_right, .mbit_left { width: 6px; height: 80px; left: 47px; }
+
+  .mbit_front  { transform: rotateY(  0deg) translateZ(3px); }
+  .mbit_back   { transform: rotateY(180deg) translateZ(3px); }
+  .mbit_right  { transform: rotateY( 90deg) translateZ(50px); }
+  .mbit_left   { transform: rotateY(-90deg) translateZ(50px); }
+  .mbit_top    { transform: rotateX( 90deg) translateZ(40px); }
+  .mbit_bottom { transform: rotateX(-90deg) translateZ(40px); }
+
+  .mbit {
+    height: 100px;
+    width: 80px;
+    position: absolute;
+    transform-style: preserve-3d;
+    transform: translateX(70px) translateY(-65px) translateZ(25px);
+  }
+
+  /*** body ***/
+  .body_top, .body_bottom { width: 160px; height: 120px; }
+  .body_front, .body_back { width: 160px; height: 80px; top: 20px; }
+  .body_right, .body_left { width: 120px; height: 80px; left:20px; top: 20px; }
+
+  .body_front  { transform: rotateY(  0deg) translateZ(60px); }
+  .body_back   { transform: rotateY(180deg) translateZ(60px); }
+  .body_right  { transform: rotateY( 90deg) translateZ(80px); }
+  .body_left   { transform: rotateY(-90deg) translateZ(80px); }
+  .body_top    { transform: rotateX( 90deg) translateZ(40px); }
+  .body_bottom { transform: rotateX(-90deg) translateZ(40px); }
+
+  .body2 {
+    height: 160px;
+    width: 120px;
+    position: absolute;
+    transform-style: preserve-3d;
+    transform: translateX(40px);
+  }
+
+  /*** right_leg ***/
+  .right_leg_top, .right_leg_bottom { width: 60px; height: 72px; top: 17px; left: 6px;}
+  .right_leg_front, .right_leg_back { width: 60px; height: 106px; left: 6px; }
+  .right_leg_right, .right_leg_left { width: 72px; height: 106px; }
+
+  .right_leg_front  { transform: rotateY(  0deg) translateZ(36px); }
+  .right_leg_back   { transform: rotateY(180deg) translateZ(36px); }
+  .right_leg_right  { transform: rotateY( 90deg) translateZ(30px); }
+  .right_leg_left   { transform: rotateY(-90deg) translateZ(30px); }
+  .right_leg_top    { transform: rotateX( 90deg) translateZ(53px); }
+  .right_leg_bottom { transform: rotateX(-90deg) translateZ(53px); }
+
+  #right_leg {
+    height: 72px;
+    width: 106px;
+    position: absolute;
+    transform-style: preserve-3d;
+    transform-origin: 40px;
+    transform: translateX(34px) translateY(120px) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+  }
+
+  /*** right_ankle ***/
+  .right_ankle_top, .right_ankle_bottom { width: 60px; height: 120px; left: 30px; }
+  .right_ankle_front, .right_ankle_back { width: 60px; height: 60px; left: 30px; top: 30px; }
+  .right_ankle_right, .right_ankle_left { width: 120px; height: 60px; top: 30px; }
+
+  .right_ankle_front  { transform: rotateY(  0deg) translateZ(60px); }
+  .right_ankle_back   { transform: rotateY(180deg) translateZ(60px); }
+  .right_ankle_right  { transform: rotateY( 90deg) translateZ(30px); }
+  .right_ankle_left   { transform: rotateY(-90deg) translateZ(30px); }
+  .right_ankle_top    { transform: rotateX( 90deg) translateZ(30px); }
+  .right_ankle_bottom { transform: rotateX(-90deg) translateZ(30px); }
+
+  .right_ankle {
+    height: 120px;
+    width: 120px;
+    position: absolute;
+    transform-style: preserve-3d;
+  }
+
+  /*** right_sole ***/
+  .right_sole_top, .right_sole_bottom { width: 100px; height: 120px; left: 10px; }
+  .right_sole_front, .right_sole_back { width: 100px; height: 6px; left: 10px; top: 57px; }
+  .right_sole_right, .right_sole_left { width: 120px; height: 6px; top: 57px; }
+
+  .right_sole_front  { transform: rotateY(  0deg) translateZ(60px); }
+  .right_sole_back   { transform: rotateY(180deg) translateZ(60px); }
+  .right_sole_right  { transform: rotateY( 90deg) translateZ(50px); }
+  .right_sole_left   { transform: rotateY(-90deg) translateZ(50px); }
+  .right_sole_top    { transform: rotateX( 90deg) translateZ(3px); }
+  .right_sole_bottom { transform: rotateX(-90deg) translateZ(3px); }
+
+  .right_sole {
+    height: 120px;
+    width: 120px;
+    position: absolute;
+    transform-style: preserve-3d;
+    transform: translateX(-20px) translateY(36px);
+  }
+
+  /*** right_sole ***/
+  #right_foot {
+    height: 120px;
+    width: 120px;
+    position: absolute;
+    transform-style: preserve-3d;
+    transform-origin: 60px 60px;
+    transform: translateX(-24px) translateY(18px);
+  }
+
+  /*** left_leg ***/
+  .left_leg_top, .left_leg_bottom { width: 60px; height: 72px; top: 17px; left: 6px;}
+  .left_leg_front, .left_leg_back { width: 60px; height: 106px; left: 6px; }
+  .left_leg_right, .left_leg_left { width: 72px; height: 106px; }
+
+  .left_leg_front  { transform: rotateY(  0deg) translateZ(36px); }
+  .left_leg_back   { transform: rotateY(180deg) translateZ(36px); }
+  .left_leg_right  { transform: rotateY( 90deg) translateZ(30px); }
+  .left_leg_left   { transform: rotateY(-90deg) translateZ(30px); }
+  .left_leg_top    { transform: rotateX( 90deg) translateZ(53px); }
+  .left_leg_bottom { transform: rotateX(-90deg) translateZ(53px); }
+
+  #left_leg {
+    width: 72px;
+    height: 106px;
+    position: absolute;
+    transform-style: preserve-3d;
+    transform-origin: 33px;
+    transform: translateX(134px) translateY(120px) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+  }
+
+  /*** left_ankle ***/
+  .left_ankle_top, .left_ankle_bottom { width: 60px; height: 120px; left: 30px; }
+  .left_ankle_front, .left_ankle_back { width: 60px; height: 60px; left: 30px; top: 30px; }
+  .left_ankle_right, .left_ankle_left { width: 120px; height: 60px; top: 30px; }
+
+  .left_ankle_front  { transform: rotateY(  0deg) translateZ(60px); }
+  .left_ankle_back   { transform: rotateY(180deg) translateZ(60px); }
+  .left_ankle_right  { transform: rotateY( 90deg) translateZ(30px); }
+  .left_ankle_left   { transform: rotateY(-90deg) translateZ(30px); }
+  .left_ankle_top    { transform: rotateX( 90deg) translateZ(30px); }
+  .left_ankle_bottom { transform: rotateX(-90deg) translateZ(30px); }
+
+  .left_ankle {
+    height: 120px;
+    width: 120px;
+    position: absolute;
+    transform-style: preserve-3d;
+  }
+
+  /*** left_sole ***/
+  .left_sole_top, .left_sole_bottom { width: 100px; height: 120px; left: 10px; }
+  .left_sole_front, .left_sole_back { width: 100px; height: 6px; left: 10px; top: 57px; }
+  .left_sole_right, .left_sole_left { width: 120px; height: 6px; top: 57px; }
+
+  .left_sole_front  { transform: rotateY(  0deg) translateZ(60px); }
+  .left_sole_back   { transform: rotateY(180deg) translateZ(60px); }
+  .left_sole_right  { transform: rotateY( 90deg) translateZ(50px); }
+  .left_sole_left   { transform: rotateY(-90deg) translateZ(50px); }
+  .left_sole_top    { transform: rotateX( 90deg) translateZ(3px); }
+  .left_sole_bottom { transform: rotateX(-90deg) translateZ(3px); }
+
+  .left_sole {
+    height: 120px;
+    width: 120px;
+    position: absolute;
+    transform-style: preserve-3d;
+    transform: translateX(20px) translateY(36px);
+  }
+
+  /*** left_sole ***/
+  #left_foot {
+    height: 120px;
+    width: 120px;
+    position: absolute;
+    transform-style: preserve-3d;
+    transform-origin: 60px 60px;
+    transform: translateX(-24px) translateY(18px);
+  }
+
+  .range_r { display:flex; text-align: center;}
+  .val_deg { width:50px; margin-top: 20px; }
+  label { width:150px; }
+  .frames { display:flex; }
+  .frame2 { width:400px; }
+
+  .adjusts { margin-bottom: 20px;}
+
+</style>
+
+<body>
+  <div class="frames">
+    <div class="frame2">
+      <div id="robot2">
+        <div class="content mbit">
+          <div class="color_top mbit_top">top</div>
+          <div class="color_bottom mbit_bottom">bottom</div>
+          <div class="color_left mbit_left">left</div>
+          <div class="color_right mbit_right">right</div>
+          <div class="color_back mbit_back">back</div>
+          <div class="color_front mbit_front">front</div>
+        </div>
+        <div class="content body2">
+          <div class="color_top body_top">top</div>
+          <div class="color_bottom body_bottom">bottom</div>
+          <div class="color_left body_left">left</div>
+          <div class="color_right body_right">right</div>
+          <div class="color_back body_back">back</div>
+          <div class="color_front body_front">front</div>
+        </div>
+        <div id="right_leg">
+          <div class="content">
+            <div class="color_top right_leg_top">top</div>
+            <div class="color_bottom right_leg_bottom">bottom</div>
+            <div class="color_left right_leg_left">left</div>
+            <div class="color_right right_leg_right">right</div>
+            <div class="color_back right_leg_back">back</div>
+            <div class="color_front right_leg_front">front</div>
+          </div>
+          <div id="right_foot">
+            <div class="content right_sole">
+              <div class="color_top right_sole_top">top</div>
+              <div class="color_bottom right_sole_bottom">bottom</div>
+              <div class="color_left right_sole_left">left</div>
+              <div class="color_right right_sole_right">right</div>
+              <div class="color_back right_sole_back">back</div>
+              <div class="color_front right_sole_front">front</div>
+            </div>
+            <div class="content right_ankle">
+              <div class="color_top right_ankle_top">top</div>
+              <div class="color_bottom right_ankle_bottom">bottom</div>
+              <div class="color_left right_ankle_left">left</div>
+              <div class="color_right right_ankle_right">right</div>
+              <div class="color_back right_ankle_back">back</div>
+              <div class="color_front right_ankle_front">front</div>
+            </div>
+          </div>
+        </div>
+        <div id="left_leg">
+          <div class="content">
+            <div class="color_top left_leg_top">top</div>
+            <div class="color_bottom left_leg_bottom">bottom</div>
+            <div class="color_left left_leg_left">left</div>
+            <div class="color_right left_leg_right">right</div>
+            <div class="color_back left_leg_back">back</div>
+            <div class="color_front left_leg_front">front</div>
+          </div>
+          <div id="left_foot">
+            <div class="content left_sole">
+              <div class="color_top left_sole_top">top</div>
+              <div class="color_bottom left_sole_bottom">bottom</div>
+              <div class="color_left left_sole_left">left</div>
+              <div class="color_right left_sole_right">right</div>
+              <div class="color_back left_sole_back">back</div>
+              <div class="color_front left_sole_front">front</div>
+            </div>
+            <div class="content left_ankle">
+              <div class="color_top left_ankle_top">top</div>
+              <div class="color_bottom left_ankle_bottom">bottom</div>
+              <div class="color_left left_ankle_left">left</div>
+              <div class="color_right left_ankle_right">right</div>
+              <div class="color_back left_ankle_back">back</div>
+              <div class="color_front left_ankle_front">front</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="frame1">
+      <div class="adjusts">
+        <div class="range_r">
+          <div id="valuex" class="val_deg">0</div>
+          <label>robot rotateX<input id="sliderx" type="range" min="-180" max="180" step="1" value="0"></label>
+          <button id="reset_x" type="button">reset</button>
+        </div>
+        <div class="range_r">
+          <div id="valuey" class="val_deg">0</div>
+          <label>robot rotateY<input id="slidery" type="range" min="-180" max="180" step="1" value="0"></label>
+          <button id="reset_y" type="button">reset</button>
+        </div>
+        <div class="range_r">
+          <div id="valuez" class="val_deg">0</div>
+          <label>robot rotateZ<input id="sliderz" type="range" min="-180" max="180" step="1" value="0"></label>
+          <button id="reset_z" type="button">reset</button>
+        </div>
+      </div>
+      <div class="adjusts">
+        <div class="range_r">
+          <div id="value_right_leg_angle" class="val_deg">0</div>
+          <label>right leg<input id="slider_right_leg" type="range" min="-90" max="90" step="1" value="0"></label>
+          <button id="reset_right_leg" type="button">reset</button>
+        </div>
+        <div class="range_r">
+          <div id="value_left_leg_angle" class="val_deg">0</div>
+          <label>left leg<input id="slider_left_leg" type="range" min="-90" max="90" step="1" value="0"></label>
+          <button id="reset_left_leg" type="button">reset</button>
+        </div>
+      </div>
+      <div class="adjusts">
+        <div class="range_r">
+          <div id="value_right_foot_angle" class="val_deg">0</div>
+          <label>right foot<input id="slider_right_foot" type="range" min="-90" max="90" step="1" value="0"></label>
+          <button id="reset_right_foot" type="button">reset</button>
+        </div>
+        <div class="range_r">
+          <div id="value_left_foot_angle" class="val_deg">0</div>
+          <label>left foot<input id="slider_left_foot" type="range" min="-90" max="90" step="1" value="0"></label>
+          <button id="reset_left_foot" type="button">reset</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+
+    let rx = 0;
+    let ry = 0;
+    let rz = 0;
+    let left_foot_angle = 0;
+    let left_leg_angle = 0;
+    let right_foot_angle = 0;
+    let right_leg_angle = 0;
+
+    function reset_angle(str) {
+      let val = 0;
+      if (str == 'right_leg') {
+        document.getElementById("slider_right_leg").value = val;
+        document.getElementById("value_right_leg_angle").innerHTML = val;
+        right_leg_angle = val;
+        document.getElementById("right_leg").style.transform = "translateX(34px) translateY(120px) rotateX(0deg) rotateZ(0deg) rotateY(" + right_leg_angle + "deg)";
+      }
+      if (str == 'left_leg') {
+        document.getElementById("slider_left_leg").value = val;
+        document.getElementById("value_left_leg_angle").innerHTML = val;
+        left_leg_angle = val;
+        document.getElementById("left_leg").style.transform = "translateX(134px) translateY(120px) rotateX(0deg) rotateZ(0deg) rotateY(" + left_leg_angle + "deg)";
+      }
+      if (str == 'right_foot') {
+        document.getElementById("slider_right_foot").value = val;
+        document.getElementById("value_right_foot_angle").innerHTML = val;
+        right_foot_angle = val;
+        document.getElementById("right_foot").style.transform = "translateX(-24px) translateY(18px) rotateX(0deg) rotateY(0deg) rotateZ(" + right_foot_angle + "deg)";
+      }
+      if (str == 'left_foot') {
+        document.getElementById("slider_left_foot").value = val;
+        document.getElementById("value_left_foot_angle").innerHTML = val;
+        left_foot_angle = val;
+        document.getElementById("left_foot").style.transform = "translateX(-24px) translateY(18px) rotateX(0deg) rotateY(0deg) rotateZ(" + left_foot_angle + "deg)";
+      }
+    }
+
+    document.getElementById("reset_right_leg").addEventListener("click", function(){
+      let val = 0;
+      document.getElementById("slider_right_leg").value = val;
+      document.getElementById("value_right_leg_angle").innerHTML = val;
+      right_leg_angle = val;
+      document.getElementById("right_leg").style.transform = "translateX(34px) translateY(120px) rotateX(0deg) rotateZ(0deg) rotateY(" + right_leg_angle + "deg)";
+    });
+
+    document.getElementById("reset_left_leg").addEventListener("click", function(){
+      let val = 0;
+      document.getElementById("slider_left_leg").value = val;
+      document.getElementById("value_left_leg_angle").innerHTML = val;
+      left_leg_angle = val;
+      document.getElementById("left_leg").style.transform = "translateX(134px) translateY(120px) rotateX(0deg) rotateZ(0deg) rotateY(" + left_leg_angle + "deg)";
+    });
+
+    document.getElementById("reset_right_foot").addEventListener("click", function(){
+      let val = 0;
+      document.getElementById("slider_right_foot").value = val;
+      document.getElementById("value_right_foot_angle").innerHTML = val;
+      right_foot_angle = val;
+      document.getElementById("right_foot").style.transform = "translateX(-24px) translateY(18px) rotateX(0deg) rotateY(0deg) rotateZ(" + right_foot_angle + "deg)";
+    });
+
+    document.getElementById("reset_left_foot").addEventListener("click", function(){
+      let val = 0;
+      document.getElementById("slider_left_foot").value = val;
+      document.getElementById("value_left_foot_angle").innerHTML = val;
+      left_foot_angle = val;
+      document.getElementById("left_foot").style.transform = "translateX(-24px) translateY(18px) rotateX(0deg) rotateY(0deg) rotateZ(" + left_foot_angle + "deg)";
+    });
+
+    document.getElementById("reset_x").addEventListener("click", function(){
+      let val = 0;
+      document.getElementById("sliderx").value = val;
+      document.getElementById("valuex").innerHTML = val;
+      rx = val;
+      document.getElementById("robot2").style.transform = "translateX(100px) translateY(100px) rotateX(" + rx + "deg) rotateY(" + ry + "deg) rotateZ(" + rz + "deg)";
+    });
+
+    document.getElementById("reset_y").addEventListener("click", function(){
+      let val = 0;
+      document.getElementById("slidery").value = val;
+      document.getElementById("valuey").innerHTML = val;
+      ry = val;
+      document.getElementById("robot2").style.transform = "translateX(100px) translateY(100px) rotateX(" + rx + "deg) rotateY(" + ry + "deg) rotateZ(" + rz + "deg)";
+    });
+
+    document.getElementById("reset_z").addEventListener("click", function(){
+      let val = 0;
+      document.getElementById("sliderz").value = val;
+      document.getElementById("valuez").innerHTML = val;
+      rz = val;
+      document.getElementById("robot2").style.transform = "translateX(100px) translateY(100px) rotateX(" + rx + "deg) rotateY(" + ry + "deg) rotateZ(" + rz + "deg)";
+    });
+
+    document.getElementById("sliderx").addEventListener("change", function(){
+      let val = this.value;
+      document.getElementById("valuex").innerHTML = val;
+      rx = val;
+      document.getElementById("robot2").style.transform = "translateX(100px) translateY(100px) rotateX(" + rx + "deg) rotateY(" + ry + "deg) rotateZ(" + rz + "deg)";
+    });
+
+    document.getElementById("slidery").addEventListener("change", function(){
+      let val = this.value;
+      document.getElementById("valuey").innerHTML = val;
+      ry = val;
+      document.getElementById("robot2").style.transform = "translateX(100px) translateY(100px) rotateX(" + rx + "deg) rotateY(" + ry + "deg) rotateZ(" + rz + "deg)";
+    });
+
+    document.getElementById("sliderz").addEventListener("change", function(){
+      let val = this.value;
+      document.getElementById("valuez").innerHTML = val;
+      rz = val;
+      document.getElementById("robot2").style.transform = "translateX(100px) translateY(100px) rotateX(" + rx + "deg) rotateY(" + ry + "deg) rotateZ(" + rz + "deg)";
+    });
+
+
+    document.getElementById("slider_left_foot").addEventListener("change", function(){
+      let val = this.value;
+      document.getElementById("value_left_foot_angle").innerHTML = val;
+      left_foot_angle = val;
+      document.getElementById("left_foot").style.transform = "translateX(-24px) translateY(18px) rotateX(0deg) rotateY(0deg) rotateZ(" + left_foot_angle + "deg)";
+    });
+
+    document.getElementById("slider_right_foot").addEventListener("change", function(){
+      let val = this.value;
+      document.getElementById("value_right_foot_angle").innerHTML = val;
+      left_foot_angle = val;
+      document.getElementById("right_foot").style.transform = "translateX(-24px) translateY(18px) rotateX(0deg) rotateY(0deg) rotateZ(" + left_foot_angle + "deg)";
+    });
+
+    document.getElementById("slider_left_leg").addEventListener("change", function(){
+      let val = this.value;
+      document.getElementById("value_left_leg_angle").innerHTML = val;
+      left_leg_angle = val;
+      document.getElementById("left_leg").style.transform = "translateX(134px) translateY(120px) rotateX(0deg) rotateZ(0deg) rotateY(" + left_leg_angle + "deg)";
+    });
+
+    document.getElementById("slider_right_leg").addEventListener("change", function(){
+      let val = this.value;
+      document.getElementById("value_right_leg_angle").innerHTML = val;
+      right_leg_angle = val;
+      document.getElementById("right_leg").style.transform = "translateX(34px) translateY(120px) rotateX(0deg) rotateZ(0deg) rotateY(" + right_leg_angle + "deg)";
+    });
+
+  </script>
+
+</body>
+
+</html>
